@@ -26,6 +26,7 @@ class Model():
         self.inputf    = False #入力受付 True #処理終了False
         self.play      = False
         self.exit      = False
+        #
         #cv2.namedWindow('screen', cv2.WINDOW_NORMAL)
         #cv2.setWindowProperty('screen', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
         self.c=0
