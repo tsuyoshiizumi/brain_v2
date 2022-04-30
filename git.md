@@ -6,8 +6,6 @@ git push origin main  //masterを更新
 
 git pull
 
-git fetch origin master
-git reset --hard origin/main
 
 
 
