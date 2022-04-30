@@ -53,7 +53,7 @@ class Model():
         if os== 'Linux':
             self.comb      = ub.port_p('5-1.1')
             #nano
-            self.comnano   = ub.port_p('5-1.3')    
+            self.comnano   = ub.port_p('5-1.3')
 
         self.serial_brain = sl.Serial(
                 self.comb, 9600, timeout=0)
