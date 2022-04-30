@@ -39,7 +39,7 @@ class Model():
         self.sec_0()    
         thread1.daemon()
         thread1.start()
-        sys.close()
+        
     def init_com(self):
     
         os = platform.system() #Windows Darwin Linux
