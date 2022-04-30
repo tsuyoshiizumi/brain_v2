@@ -34,9 +34,12 @@ class Model():
         #ここから別スレッドで入力を待つ
         self.init_com()
         thread1 = threading.Thread(target=self.thread1)
-        thread1.start()
+        
         self.reset()
-        self.sec_0()     
+        self.sec_0()    
+        thread1.daemon()
+        thread1.start()
+        sys.close()
     def init_com(self):
     
         os = platform.system() #Windows Darwin Linux
@@ -67,7 +70,9 @@ class Model():
         self.sec           = 0
         self.inputf        = False       
     def thread1(self):
-       while True: 
+       while True:
+         if self.signal=='9':
+             return   
          t1=time.time()
          line = None
          if(self.serial_brain.is_open):
@@ -211,6 +216,7 @@ class Model():
       return ret          
     def exit_app(self):
             print('exit')
+            self.signal='9'
             self.cap.release()
             cv2.waitKey(1)
             cv2.destroyAllWindows()
