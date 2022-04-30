@@ -34,22 +34,22 @@ class Model():
         #ここから別スレッドで入力を待つ
         self.init_com()
         thread1 = threading.Thread(target=self.thread1)
-        
+  
+        thread1.start()
         self.reset()
         self.sec_0()    
-        thread1.daemon()
-        thread1.start()
+        
         
     def init_com(self):
     
         os = platform.system() #Windows Darwin Linux
          #脳波計シリアルポート
         if os== 'Darwin': 
-            self.comb      = '/dev/tty.usbmodem537E0144721'
+            self.comb      = '/dev/tty.usbmodem54260134801'
             #M5
             self.comm5     = '/dev/tty.usbmodem54240333141'
             #nano
-            self.comnano   = '/dev/tty.usbserial-1130'
+            self.comnano   = '/dev/tty.usbserial-130'
         if os== 'Linux':
             self.comb      = ub.port_p('5-1.1')
             #M5
