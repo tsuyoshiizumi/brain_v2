@@ -52,10 +52,8 @@ class Model():
             self.comnano   = '/dev/tty.usbserial-130'
         if os== 'Linux':
             self.comb      = ub.port_p('5-1.1')
-            #M5
-            self.comm5     = ub.port_p('2-1')
             #nano
-            self.comnano   = ub.port_p('5-1.2')    
+            self.comnano   = ub.port_p('5-1.3')    
 
         self.serial_brain = sl.Serial(
                 self.comb, 9600, timeout=0)
