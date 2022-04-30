@@ -7,7 +7,7 @@ def port_p(location):
     ports = list(serial.tools.list_ports.comports())
     res = ''
     for p in ports:
-        if p.location in location :
+        if location  in p.location :
             print(p.device)
             print(p.location)
             res = p.device
