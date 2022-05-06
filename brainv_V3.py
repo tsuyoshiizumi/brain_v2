@@ -35,12 +35,23 @@ class Model():
         self.c=0
         img = cv2.imread('./sec0.jpg')
         img_resize = cv2.resize(img,dsize=(self.gwidth, self.gheight))
-        cv2.imshow("MATLAB",img_resize)
+       
+        c=0
+        while True:
+         if c==1:
+             break
+         cv2.imshow("MATLAB",img_resize)
+         key = cv2.waitKey(1)
+         cv2.destroyAllWindows()
+         if key != -1:
+             break 
+         self.init_com()
+         c=c+1    
+
+
+         
         
-        cv2.waitKey(1)
-        cv2.destroyAllWindows()
         
-        self.init_com()
         thread1 = threading.Thread(target=self.thread1)
         thread1.start()
         self.reset()
