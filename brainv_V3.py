@@ -8,7 +8,7 @@ import serial as sl
 import threading
 import usbdebug2 as ub
 import platform
-
+from PIL import Image
 class Model():
     def __init__(self): 
         tk = tkinter.Tk()
@@ -29,10 +29,38 @@ class Model():
         #
         #cv2.namedWindow('screen', cv2.WINDOW_NORMAL)
         #cv2.setWindowProperty('screen', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+   
         self.c=0
-        #self.init_com()
-        #ここから別スレッドで入力を待つ
+        img = cv2.imread('Lenna.png')
+
+        img_resize = cv2.resize(img,dsize=(self.gwidth, self.gheight))
+
+        #img = cv2.imread(img_resize)ｑ
+        #img2 = cv2.imread("Lenna.png",0)#グレースケールで読み込み
+        cv2.imshow("MATLAB",img_resize)
+        
+        #cv2.imshow("gray",img2)
+        cv2.waitKey(1)
+        cv2.destroyAllWindows()
+        os = platform.system() #Windows Darwin Linux
+         #脳波計シリアルポート
+        
+        if os== 'Darwin': 
+                self.comb      = '/dev/tty.usbmodem54260134801'
+                #M5
+                self.comm5     = '/dev/tty.usbmodem54240333141'
+                #nano
+                self.comnano   = '/dev/tty.usbserial-0001'
+        if os== 'Linux':
+                self.comb      = ub.port_p('5-1.3')
+                #nano
+                self.comnano   = ub.port_p('5-1.2')
         self.init_com()
+       
+        print('kokko')
+        #ここから別スレッドで入力を待つ
+        
+        # self.init_com()
         thread1 = threading.Thread(target=self.thread1)
   
         thread1.start()
@@ -42,25 +70,19 @@ class Model():
         
     def init_com(self):
     
-        os = platform.system() #Windows Darwin Linux
-         #脳波計シリアルポート
-        if os== 'Darwin': 
-            self.comb      = '/dev/tty.usbmodem54260134801'
-            #M5
-            self.comm5     = '/dev/tty.usbmodem54240333141'
-            #nano
-            self.comnano   = '/dev/tty.usbserial-130'
-        if os== 'Linux':
-            self.comb      = ub.port_p('5-1.3')
-            #nano
-            self.comnano   = ub.port_p('5-1.2')
+        
+        try:        
+            self.serial_brain = sl.Serial(
+                        self.comb, 9600, timeout=0)
+                # self.serial_M5    = sl.Serial(
+                #        self.comm5 , 115200, timeout=0)
+            self.serial_NANO    = sl.Serial(
+                            self.comnano, 9600, timeout=0)    
+        except:
+            time.sleep(1/10)
+            self.init_com()
 
-        self.serial_brain = sl.Serial(
-                self.comb, 9600, timeout=0)
-       # self.serial_M5    = sl.Serial(
-       #        self.comm5 , 115200, timeout=0)
-        self.serial_NANO    = sl.Serial(
-                self.comnano, 9600, timeout=0)        
+
     def reset(self):
         self.cuurent_farme = 0
         self.starttime     = 0
