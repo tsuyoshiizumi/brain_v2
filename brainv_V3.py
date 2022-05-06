@@ -1,5 +1,6 @@
 from mimetypes import init
 import re
+from signal import signal
 import sys
 import tkinter 
 import cv2
@@ -16,7 +17,8 @@ class Model():
         self.gheight = tk.winfo_screenheight()
         tk.destroy()
         self.cap = cv2.VideoCapture(r'./video/osaka_mr2021.mp4')
-        
+        self.init2()
+    def init2(self):    
         self.fps = self.cap.get(cv2.CAP_PROP_FPS)
         self.starttime = 0 
         self.stoptime  = 3 #最初の待機時間
@@ -31,20 +33,23 @@ class Model():
         #cv2.setWindowProperty('screen', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
    
         self.c=0
-        img = cv2.imread('Lenna.png')
-
+        img = cv2.imread('./sec0.jpg')
         img_resize = cv2.resize(img,dsize=(self.gwidth, self.gheight))
-
-        #img = cv2.imread(img_resize)ｑ
-        #img2 = cv2.imread("Lenna.png",0)#グレースケールで読み込み
         cv2.imshow("MATLAB",img_resize)
         
-        #cv2.imshow("gray",img2)
         cv2.waitKey(1)
         cv2.destroyAllWindows()
-        os = platform.system() #Windows Darwin Linux
-         #脳波計シリアルポート
         
+        self.init_com()
+        thread1 = threading.Thread(target=self.thread1)
+        thread1.start()
+        self.reset()
+        self.sec_0()    
+        thread1.join()
+        if self.signal!='9':
+            self.init2()     
+    def init_com(self):
+        os = platform.system() #Windows Darwin Linux
         if os== 'Darwin': 
                 self.comb      = '/dev/tty.usbmodem54260134801'
                 #M5
@@ -52,34 +57,18 @@ class Model():
                 #nano
                 self.comnano   = '/dev/tty.usbserial-0001'
         if os== 'Linux':
-                self.comb      = ub.port_p('5-1.3')
+                self.comb      = ub.port_p('1.3')
                 #nano
-                self.comnano   = ub.port_p('5-1.2')
-        self.init_com()
-       
-        print('kokko')
-        #ここから別スレッドで入力を待つ
-        
-        # self.init_com()
-        thread1 = threading.Thread(target=self.thread1)
-  
-        thread1.start()
-        self.reset()
-        self.sec_0()    
-        
-        
-    def init_com(self):
-    
+                self.comnano   = ub.port_p('1.2')
+     
         
         try:        
             self.serial_brain = sl.Serial(
                         self.comb, 9600, timeout=0)
-                # self.serial_M5    = sl.Serial(
-                #        self.comm5 , 115200, timeout=0)
             self.serial_NANO    = sl.Serial(
                             self.comnano, 9600, timeout=0)    
         except:
-            time.sleep(1/10)
+            time.sleep(1)
             self.init_com()
 
 
@@ -118,16 +107,25 @@ class Model():
          time.sleep(1/100)
 
     def sec_0(self):
-       
         self.reset()
+        #3秒空白を入れる
+        img = cv2.imread('./sec0_1.jpg')
+        img_resize = cv2.resize(img,dsize=(self.gwidth, self.gheight))
+        cv2.imshow("MATLAB",img_resize)
+        
+        cv2.waitKey(1)
+        cv2.destroyAllWindows()
+        time.sleep(3)
+        
+        
         self.serial_NANO.write(b'a')
         self.sec    = 0
         self.cap.set(cv2.CAP_PROP_POS_FRAMES, 1)
         ret, self.frame = self.cap.read()
         
         #cv2.namedWindow('screen',cv2.WINDOW_GUI_NORMAL)
-        cv2.namedWindow('screen',cv2.WINDOW_AUTOSIZE)
-        cv2.setWindowProperty('screen', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+        cv2.namedWindow('MATLAB',cv2.WINDOW_AUTOSIZE)
+        #cv2.setWindowProperty('MATLAB', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
         #cv2.resizeWindow('screen', self.gwidth, self.gheight)
         
@@ -135,11 +133,9 @@ class Model():
         self.c = self.c+1
         
         print( self.gwidth)
-        cv2.imshow("screen", self.frame)
+        cv2.imshow("MATLAB", self.frame)
         cv2.waitKey(1)
-        if(self.c<2):
-           print(self.c) 
-           self.sec_0()           
+             
         t1= time.time()
         while(self.cap.isOpened()):
             if(self.signal =='9' ):
@@ -166,7 +162,7 @@ class Model():
                 print('5')
                 break
             if ret == True:
-                cv2.imshow("screen", self.frame)      
+                cv2.imshow("MATLAB", self.frame)      
                 if cv2.waitKey(1) & 0xFF == ord('q'): 
                    self.exit_app()
                    break
@@ -188,7 +184,7 @@ class Model():
            ret = self.wait_skip(ret) 
            if ret == True:
                 self.frame = cv2.resize(self.frame,(self.gwidth,self.gheight))
-                cv2.imshow("screen", self.frame)      
+                cv2.imshow("MATLAB", self.frame)      
                 if self.signal == '2' and self.inputf ==False:
                    self.inputf= True
                    t1= time.time()
