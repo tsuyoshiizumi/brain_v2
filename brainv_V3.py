@@ -35,23 +35,22 @@ class Model():
         self.c=0
         img = cv2.imread('./sec0.jpg')
         img_resize = cv2.resize(img,dsize=(self.gwidth, self.gheight))
-       
-        c=0
+        cv2.imshow("MATLAB",img_resize)
+        
+        res=0
         while True:
-         if c==1:
-             break
-         cv2.imshow("MATLAB",img_resize)
-         key = cv2.waitKey(1)
-         cv2.destroyAllWindows()
-         if key != -1:
-             break 
-         self.init_com()
-         c=c+1    
-
-
-         
-        
-        
+            key = cv2.waitKey(1)
+            if res==1:
+                cv2.destroyAllWindows()
+                break
+            if key != -1:
+                cv2.destroyAllWindows()
+                cv2.waitKey(1)
+                cv2.destroyAllWindows()
+                cv2.waitKey(1) 
+                sys.exit()
+                break 
+            res = self.init_com()
         thread1 = threading.Thread(target=self.thread1)
         thread1.start()
         self.reset()
@@ -79,9 +78,8 @@ class Model():
             self.serial_NANO    = sl.Serial(
                             self.comnano, 9600, timeout=0)    
         except:
-            time.sleep(1)
-            self.init_com()
-
+            return 0
+        return 1  
 
     def reset(self):
         self.cuurent_farme = 0
@@ -123,10 +121,14 @@ class Model():
         img = cv2.imread('./sec0_1.jpg')
         img_resize = cv2.resize(img,dsize=(self.gwidth, self.gheight))
         cv2.imshow("MATLAB",img_resize)
-        
-        cv2.waitKey(1)
-        cv2.destroyAllWindows()
-        time.sleep(3)
+        t1= time.time()
+        while True:
+            key = cv2.waitKey(1)
+            if time.time()-t1 > 3:
+              break  
+            if key !=-1 :
+              break
+            time.sleep(1/10)
         
         
         self.serial_NANO.write(b'a')
