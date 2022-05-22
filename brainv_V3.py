@@ -67,8 +67,8 @@ class Model():
                 #nano
                 self.comnano   = '/dev/tty.usbserial-0001'
         if os== 'Linux':
-                self.comb      = '/dev/ttys0'#ub.port_p('1.3')
-                #nano
+                self.comb      = '/dev/ttyS0'#ub.port_p('1.3')
+                #nanoß
                 self.comnano   = ub.port_p('1.2')
         if os== 'Windows':      
                  self.comb      = 'com1'        
