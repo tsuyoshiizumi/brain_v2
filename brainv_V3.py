@@ -141,7 +141,7 @@ class Model():
         ret, self.frame = self.cap.read()
         
         #cv2.namedWindow('screen',cv2.WINDOW_GUI_NORMAL)
-        cv2.namedWindow('MATLAB',cv2.WINDOW_AUTOSIZE)
+        #cv2.namedWindow('MATLAB',cv2.WINDOW_AUTOSIZE)
         #cv2.setWindowProperty('MATLAB', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
         #cv2.resizeWindow('screen', self.gwidth, self.gheight)
