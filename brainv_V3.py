@@ -30,9 +30,9 @@ class Model():
         self.exit      = False
         os = platform.system()
         if os== 'Linux':
-         cv2.namedWindow('screen', cv2.WINDOW_NORMAL)
-         cv2.moveWindow('screen', 0, 0)
-         cv2.setWindowProperty('screen', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+         cv2.namedWindow("MATLAB", cv2.WINDOW_NORMAL)
+         cv2.moveWindow("MATLAB", 0, 0)
+         cv2.setWindowProperty("MATLAB", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
    
         self.c=0
         img = cv2.imread('./sec0.jpg')
