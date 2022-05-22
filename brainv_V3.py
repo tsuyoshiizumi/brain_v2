@@ -35,8 +35,8 @@ class Model():
    
         self.c=0
         img = cv2.imread('./sec0.jpg')
-        img_resize = cv2.resize(img,dsize=(self.gwidth, self.gheight))
-        cv2.imshow("MATLAB",img_resize)
+        #img_resize = cv2.resize(img,dsize=(self.gwidth, self.gheight))
+        cv2.imshow("MATLAB",img)
         
         res=0
         while True:
