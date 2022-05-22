@@ -31,12 +31,13 @@ class Model():
         os = platform.system()
         if os== 'Linux':
          cv2.namedWindow('screen', cv2.WINDOW_NORMAL)
+         cv2.moveWindow('screen', 0, 0)
          cv2.setWindowProperty('screen', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
    
         self.c=0
         img = cv2.imread('./sec0.jpg')
-        #img_resize = cv2.resize(img,dsize=(self.gwidth, self.gheight))
-        cv2.imshow("MATLAB",img)
+        img_resize = cv2.resize(img,dsize=(self.gwidth, self.gheight))
+        cv2.imshow("MATLAB",img_resize)
         
         res=0
         while True:
