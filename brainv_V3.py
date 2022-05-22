@@ -67,10 +67,12 @@ class Model():
                 #nano
                 self.comnano   = '/dev/tty.usbserial-0001'
         if os== 'Linux':
-                self.comb      = ub.port_p('1.3')
+                self.comb      = '/dev/ttys0'#ub.port_p('1.3')
                 #nano
                 self.comnano   = ub.port_p('1.2')
-     
+        if os== 'Windows':      
+                 self.comb      = 'com1'        
+                 self.comnano   = 'com2'
         
         try:        
             self.serial_brain = sl.Serial(
