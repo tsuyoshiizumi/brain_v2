@@ -29,7 +29,7 @@ class Model():
         self.play      = False
         self.exit      = False
         os = platform.system()
-        if os== 'Linux' or 'Windows':
+        if os== 'Linux' or os == 'Windows':
          cv2.namedWindow("MATLAB", cv2.WINDOW_NORMAL)
          cv2.moveWindow("MATLAB", 0, 0)
          cv2.setWindowProperty("MATLAB", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
@@ -73,8 +73,8 @@ class Model():
                 #nanoß
                 self.comnano   = ub.port_p('1.2')
         if os== 'Windows':      
-                 self.comb      = 'com1'        
-                 self.comnano   = 'com2'
+                 self.comb      = 'COM8'        
+                 self.comnano   = 'COM9'
         
         try:        
             self.serial_brain = sl.Serial(
@@ -86,7 +86,7 @@ class Model():
         return 1  
 
     def reset(self):
-        self.cuurent_farme = 0
+        self.cuurent_farme = 50
         self.starttime     = 0
         self.frames        = None
         self.sec           = 0
@@ -195,6 +195,7 @@ class Model():
         self.starttime= time.time()
         self.signal = 0
         self.play=True
+        self.cap.set(cv2.CAP_PROP_POS_FRAMES, 30)
         while(self.cap.isOpened()):
            ret, self.frame = self.cap.read()
            self.serial_NANO.write(b'b')
