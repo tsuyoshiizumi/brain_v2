@@ -29,7 +29,7 @@ class Model():
         self.play      = False
         self.exit      = False
         os = platform.system()
-        if os== 'Linux':
+        if os== 'Linux' or 'Windows':
          cv2.namedWindow("MATLAB", cv2.WINDOW_NORMAL)
          cv2.moveWindow("MATLAB", 0, 0)
          cv2.setWindowProperty("MATLAB", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
@@ -63,9 +63,9 @@ class Model():
     def init_com(self):
         os = platform.system() #Windows Darwin Linux
         if os== 'Darwin': 
-                self.comb      = '/dev/tty.usbmodem54260134801'
+                self.comb      = '/dev/tty.usbmodem54240333141'
                 #M5
-                self.comm5     = '/dev/tty.usbmodem54240333141'
+                #self.comm5     = '/dev/tty.usbmodem54240333141'
                 #nano
                 self.comnano   = '/dev/tty.usbserial-0001'
         if os== 'Linux':
