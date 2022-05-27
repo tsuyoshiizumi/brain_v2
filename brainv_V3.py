@@ -9,9 +9,13 @@ import serial as sl
 import threading
 import usbdebug2 as ub
 import platform
+import json
 from PIL import Image
 class Model():
     def __init__(self): 
+        json_open   = open('./settings.json', 'r')
+        self.config = json.load(json_open)
+
         tk = tkinter.Tk()
         self.gwidth  = tk.winfo_screenwidth()
         self.gheight = tk.winfo_screenheight()
@@ -63,14 +67,14 @@ class Model():
     def init_com(self):
         os = platform.system() #Windows Darwin Linux
         if os== 'Darwin': 
-                self.comb      = '/dev/tty.usbmodem54240333141'
+                self.comb      = '/dev/tty.usbmodem54260134801'
                 #M5
                 #self.comm5     = '/dev/tty.usbmodem54240333141'
                 #nano
                 self.comnano   = '/dev/tty.usbserial-0001'
         if os== 'Linux':
                 self.comb      = '/dev/ttyS0'#ub.port_p('1.3')
-                #nanoß
+                #nano
                 self.comnano   = ub.port_p('1.2')
         if os== 'Windows':      
                  self.comb      = 'COM8'        
