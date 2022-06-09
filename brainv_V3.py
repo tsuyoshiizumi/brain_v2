@@ -1,5 +1,4 @@
 from mimetypes import init
-import re
 from signal import signal
 import sys
 import tkinter
@@ -109,7 +108,6 @@ class Model():
         except:
             return 0
         return 1  
-
     def reset(self):
         self.starttime     = 0
         self.frames        = None
@@ -142,22 +140,21 @@ class Model():
             print('NG_m5')  
             return            
          time.sleep(1/100)
-
     def sec_0(self):
         #動画を開始タイミングまで戻すかぶってる
         self.reset()
         #3秒空白を入れる　ここはいらないといわれている
-        img = cv2.imread('./sec0_1.jpg')
-        img_resize = cv2.resize(img,dsize=(self.gwidth, self.gheight))
-        cv2.imshow("MATLAB",img_resize)
-        t1= time.time()
-        while True:
-            key = cv2.waitKey(1)
-            if time.time()-t1 > 3:
-              break  
-            if key !=-1 :
-              break
-            time.sleep(1/10)
+        # img = cv2.imread('./sec0_1.jpg')
+        # img_resize = cv2.resize(img,dsize=(self.gwidth, self.gheight))
+        # cv2.imshow("MATLAB",img_resize)
+        # t1= time.time()
+        # while True:
+        #     key = cv2.waitKey(1)
+        #     if time.time()-t1 > 3:
+        #       break  
+        #     if key !=-1 :
+        #       break
+        #     time.sleep(1/10)
         #ここまで不要    
         
         #動画再生準備
@@ -207,8 +204,7 @@ class Model():
         if self.signal=='9':  #9番はマイコンからのリセットボタンの信号->self.sec_0へ
             self.signal ='0'
             self.sec_0()    
-        self.sec_2()    
-    
+        self.sec_2()      
     def sec_2(self):
         print('動画開始')
         self.starttime= time.time() 
@@ -292,7 +288,6 @@ class Model():
             cv2.waitKey(1) 
             sys.exit()
             return      
-
 model = Model()
 #model.reset()
 
