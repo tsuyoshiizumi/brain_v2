@@ -3,7 +3,6 @@ import re
 from signal import signal
 import sys
 import tkinter
-from anyio import current_effective_deadline 
 import cv2
 import time
 import serial as sl
