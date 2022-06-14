@@ -46,9 +46,9 @@ class Model():
         #osの判別　Linux'＝>thinkerbord Darwin=>mac 'Windows　    
         os = platform.system()
         if os== 'Linux' or os == 'Windows':
-         cv2.namedWindow("MATLAB", cv2.WINDOW_NORMAL)
-         cv2.moveWindow("MATLAB", 0, 0)
-         cv2.setWindowProperty("MATLAB", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+            cv2.namedWindow("MATLAB", cv2.WINDOW_NORMAL)
+            cv2.moveWindow("MATLAB", 0, 0)
+            cv2.setWindowProperty("MATLAB", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
         
         #接続機器の確認画面
         self.c=0
@@ -115,8 +115,8 @@ class Model():
         self.inputf        = False       
     def thread1(self):
        while True:
-         if self.signal=='9':
-             return   
+         #if self.signal=='9':
+         #    return   
          t1=time.time()
          line = None
          if(self.serial_brain.is_open):
@@ -144,17 +144,17 @@ class Model():
         #動画を開始タイミングまで戻すかぶってる
         self.reset()
         #3秒空白を入れる　ここはいらないといわれている
-        # img = cv2.imread('./sec0_1.jpg')
-        # img_resize = cv2.resize(img,dsize=(self.gwidth, self.gheight))
-        # cv2.imshow("MATLAB",img_resize)
-        # t1= time.time()
-        # while True:
-        #     key = cv2.waitKey(1)
-        #     if time.time()-t1 > 3:
-        #       break  
-        #     if key !=-1 :
-        #       break
-        #     time.sleep(1/10)
+        #img = cv2.imread('./sec0_1.jpg')
+        #img_resize = cv2.resize(img,dsize=(self.gwidth, self.gheight))
+        #cv2.imshow("MATLAB",img_resize)
+        #t1= time.time()
+        #while True:
+        #    key = cv2.waitKey(1)
+        #    if time.time()-t1 > 3:
+        #      break  
+        #    if key !=-1 :
+        #      break
+        #    time.sleep(1/10)
         #ここまで不要    
         
         #動画再生準備
@@ -194,6 +194,7 @@ class Model():
                 print('5')
                 break
             if ret == True: 
+                self.frame = cv2.resize(self.frame,(self.gwidth,self.gheight))
                 cv2.imshow("MATLAB", self.frame)      
                 if cv2.waitKey(1) & 0xFF == ord('q'): 
                    self.exit_app()
@@ -218,7 +219,7 @@ class Model():
            self.serial_NANO.write(b'b')
            ret = self.wait_skip(ret)
            if ret == True:
-                #self.frame = cv2.resize(self.frame,(self.gwidth,self.gheight))
+                self.frame = cv2.resize(self.frame,(self.gwidth,self.gheight))
                 cv2.imshow("MATLAB", self.frame)      
                 if self.signal == '2' and self.inputf ==False:
                    self.inputf= True

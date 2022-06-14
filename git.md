@@ -8,6 +8,3 @@ git pull
 
 M7UFkdAGhDE4kkXeXW2V
 git clone https://tsuyoshiizumi@bitbucket.org/tsuyoshiizumi/brain.git
-
-
-
