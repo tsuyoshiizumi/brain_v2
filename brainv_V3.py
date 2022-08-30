@@ -27,10 +27,13 @@ class Model():
         
         #jsonファイルより
         self.cap = cv2.VideoCapture(r'./video/' + self.config['videofile'])
-        self.startframe = self.config['startframe']  #動画の再生位置
-        self.starthand  = self.config['starthand']  #ハンドの起動位置
-        self.startstop  = self.config['startstop']   #動画停止タイミング
-
+        self.startframe   = self.config['startframe']  #動画の再生位置
+        self.starthand    = self.config['starthand']  #ハンドの起動位置
+        self.startstop    = self.config['startstop']   #動画停止タイミング
+        self.speed        = self.config['speed']       #大きいほど早い　1を基準に100分率  
+        self.retunstarttime = self.config['retunstarttime'] #秒数
+        self.retrunsignal   = self.config['retrunendtime']   #秒+　-
+  
         self.fps = self.cap.get(cv2.CAP_PROP_FPS)
         self.starttime = 0 
         self.stoptime  = 3 #最初の待機時間
@@ -76,7 +79,7 @@ class Model():
         # serial_NANO->アルデューノからの信号
         thread1 = threading.Thread(target=self.thread1)
         thread1.start()
-        
+        time.sleep(2)
         #動画を開始タイミングまで戻す
         self.reset()
         #計測開始sec_0へ
@@ -158,6 +161,7 @@ class Model():
         #ここまで不要    
         
         #動画再生準備
+        time.sleep(self.retrunsignal) 
         self.serial_NANO.write(b'a') #マイコンにaを送る->マイコンは脳波計に信号を送る動画停止中
         self.sec    = 0              #現在のセクション
         self.cap.set(cv2.CAP_PROP_POS_FRAMES, self.startframe) #動画のフレームをstart位置に
@@ -216,7 +220,8 @@ class Model():
         hand = 0
         while(self.cap.isOpened()):
            ret, self.frame = self.cap.read()
-           self.serial_NANO.write(b'b')
+           if(self.starttime + (self.retunstarttime) < time.time()):
+             self.serial_NANO.write(b'b')
            ret = self.wait_skip(ret)
            if ret == True:
                 self.frame = cv2.resize(self.frame,(self.gwidth,self.gheight))
@@ -266,7 +271,7 @@ class Model():
     #動画の再生スピードの調整     
     def wait_skip(self,ret):
       ct =  (time.time() * 1000) - (self.starttime * 1000)
-      ft =  (1000 / self.fps)  * (self.cap.get(cv2.CAP_PROP_POS_FRAMES)-self.startframe) 
+      ft =  (1000 / (self.fps*self.speed))  * (self.cap.get(cv2.CAP_PROP_POS_FRAMES)-self.startframe) 
       #print('ft'+ str(ft))
       #print('ct' +str(ct)) 
       if(ft > ct):
@@ -274,7 +279,8 @@ class Model():
              ct = (time.time() * 1000) - (self.starttime * 1000)
              time.sleep(1/100)
       else:
-        while ft < ct:
+         while ft < ct:
+            ft =  (1000 / (self.fps*self.speed))  * (self.cap.get(cv2.CAP_PROP_POS_FRAMES)-self.startframe)
             ret, self.frame  = self.cap.read()
             if ret == False:
                 return ret

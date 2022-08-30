@@ -2,5 +2,8 @@
     "videofile":"osaka_mr2021.mp4",
     "startframe": 55,
     "starthand": 80,
-    "startstop": 80
+    "startstop": 80,
+    "speed"    : 1.0,
+    "retunstarttime":0, 
+    "retrunendsignal":0
   }
