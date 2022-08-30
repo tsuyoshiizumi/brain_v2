@@ -91,7 +91,7 @@ class Model():
                 #M5
                 #self.comm5     = '/dev/tty.usbmodem54240333141'
                 #nano
-                self.comnano   =  '/dev/tty.usbmodem54240333141'
+                self.comnano   =  '/dev/tty.usbserial-0001'
         if os== 'Linux':
                 self.comb      = '/dev/ttyS0'#ub.port_p('1.3')
                 #nano
@@ -201,7 +201,7 @@ class Model():
                    break
             else:
                break
-            time.sleep(1/1000) 
+            time.sleep(1/50) 
         if self.signal=='9':  #9番はマイコンからのリセットボタンの信号->self.sec_0へ
             self.signal ='0'
             self.sec_0()    
@@ -254,7 +254,7 @@ class Model():
            else:
                self.play=False
                break
-           time.sleep(1/1000)
+           time.sleep(1/100)
         print(time.time()-self.starttime)  
         print(self.cap.get(cv2.CAP_PROP_POS_FRAMES))     
         print('終了')
@@ -272,10 +272,10 @@ class Model():
       if(ft > ct):
          while ft > ct:
              ct = (time.time() * 1000) - (self.starttime * 1000)
-             time.sleep(1/1000)
+             time.sleep(1/100)
       else:
+        while ft < ct:
             ret, self.frame  = self.cap.read()
-            
             if ret == False:
                 return ret
       return ret          
