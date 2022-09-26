@@ -1,1 +1,1 @@
-killall Python
+pkill Python
