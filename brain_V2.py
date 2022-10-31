@@ -7,7 +7,6 @@ import time
 import serial as sl
 
 
-
 class Model():
 
     def __init__(self):
@@ -17,7 +16,7 @@ class Model():
 
         # 画像処理の設定
         self.gray = False
-        self.flip= False
+        self.flip = False
 
         # 読み込んだフレーム
         self.frames = None
@@ -27,7 +26,6 @@ class Model():
 
         # Tkinter画像オブジェクト参照用
         self.image_tk = None
-
 
     def create_video(self, path):
         '動画オブジェクトの生成を行う'
@@ -43,7 +41,7 @@ class Model():
 
         # フレームの読み込み
         ret, self.frame = self.video.read()
-        
+
         return ret
 
     def reverse_video(self):
@@ -70,7 +68,7 @@ class Model():
         # PIL イメージに変換
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         pil_image = Image.fromarray(rgb_frame)
-        
+
         # 指定サイズに合わせて画像をリサイズ
 
         # 拡大率を計算
@@ -115,6 +113,7 @@ class Model():
     def set_flip(self):
         self.flip = not self.flip
 
+
 class View():
 
     def __init__(self, app, model):
@@ -129,9 +128,8 @@ class View():
         'アプリ内にウィジェットを作成・配置する'
 
         # キャンバスのサイズ
-        canvas_width = 800  
+        canvas_width = 800
         canvas_height = 400
-
 
         # キャンバスとボタンを配置するフレームの作成と配置
         self.main_frame = tkinter.Frame(
@@ -151,7 +149,6 @@ class View():
         )
         self.operation_frame.grid(column=2, row=1)
 
-
         # キャンバスの作成と配置
         self.canvas = tkinter.Canvas(
             self.canvas_frame,
@@ -165,9 +162,9 @@ class View():
         self.load_button = tkinter.Button(
             self.operation_frame,
             text="動画選択"
-        ) 
+        )
         self.load_button.pack()
-        #とりあえず消す
+        # とりあえず消す
         self.load_button.pack_forget()
 
         # グレーON/OFFボタンの作成と配置
@@ -185,7 +182,6 @@ class View():
         )
         self.flip_button.pack()
         self.flip_button.pack_forget()
-
 
     def draw_image(self):
         '画像をキャンバスに描画'
@@ -275,6 +271,7 @@ class View():
         self.canvas.delete("oval")
         self.canvas.delete("triangle")
 
+
 class Controller():
 
     def __init__(self, app, model, view):
@@ -282,22 +279,22 @@ class Controller():
         self.model = model
         self.view = view
 
-        #脳波計シリアルポート
+        # 脳波計シリアルポート
         self.comb = '/dev/tty.usbmodem537E0144721'
-        #M5シリアルポート
-        
-        #シリアルポートとの接続
-        self.serial=None
+        # M5シリアルポート
+
+        # シリアルポートとの接続
+        self.serial = None
         try:
             self.serial = sl.Serial(
                 self.comb, 9600, timeout=0)
             stand = True
         except Exception as e:
-            print('NG')    
-        #脳波計の信号
-        self.signal=-1 
-        #inputflg
-        self.input = False   
+            print('NG')
+        # 脳波計の信号
+        self.signal = -1
+        # inputflg
+        self.input = False
 
         # 動画再生中かどうかの管理
         self.playing = False
@@ -310,8 +307,8 @@ class Controller():
         self.master.after(100, self.auto_load)
         self.master.after(100, self.auto_load2)
         self.serial_read()
-       
-       #ここから自動処理
+
+       # ここから自動処理
     def set_events(self):
         '受け付けるイベントを設定する'
 
@@ -366,69 +363,72 @@ class Controller():
                 self.model.reverse_video()
                 self.playing = False
                 self.auto_load()
-    def auto_load(self):             
-            # 動画オブジェクト生成
-            self.model.create_video('/Users/izumitsuyoshi/ft/brain_v2/video/osaka_fl2021.mp4')
-      
-            # 最初のフレームを表示
-            self.model.advance_frame()
-            self.model.create_image(
-                (
-                    self.view.canvas.winfo_width(),
-                    self.view.canvas.winfo_height()
-                )
+
+    def auto_load(self):
+        # 動画オブジェクト生成
+        self.model.create_video(
+            '/Users/izumitsuyoshi/ft/brain_v2/video/osaka_fl2021.mp4')
+
+        # 最初のフレームを表示
+        self.model.advance_frame()
+        self.model.create_image(
+            (
+                self.view.canvas.winfo_width(),
+                self.view.canvas.winfo_height()
             )
-            self.model.reverse_video()
-            self.view.draw_image()
-            self.input=False
+        )
+        self.model.reverse_video()
+        self.view.draw_image()
+        self.input = False
 
-            # 再生ボタンの表示
-            self.view.delete_play_button()
-            self.view.draw_play_button()
+        # 再生ボタンの表示
+        self.view.delete_play_button()
+        self.view.draw_play_button()
 
-    def auto_load2(self):    
+    def auto_load2(self):
         # ファイル選択画面表示
         #file_path = self.view.select_open_file('/video/osaka_fl2021.mp4')
-            # FPSに合わせてフレームを進める間隔を決定
-            fps = self.model.get_fps()
-            self.frame_timer = int(1 / fps * 1000 + 0.5)
+        # FPSに合わせてフレームを進める間隔を決定
+        fps = self.model.get_fps()
+        self.frame_timer = int(1 / fps * 1000 + 0.5)
 
-            # フレーム進行用のタイマースタート
-            self.master.after(self.frame_timer, self.frame)
+        # フレーム進行用のタイマースタート
+        self.master.after(self.frame_timer, self.frame)
 
-            # 画像の描画用のタイマーセット
-            self.master.after(self.draw_timer, self.draw)    
-    
-    #シリアルコントロール
+        # 画像の描画用のタイマーセット
+        self.master.after(self.draw_timer, self.draw)
+
+    # シリアルコントロール
     def serial_read(self):
-         line = None
-         if(self.serial.is_open):
-                    line = self.serial.readline()
-                    line = line.strip().decode('utf-8')
-                    self.signal = line
-         else:
-           print('NG')  
-           return           
-         self.master.after(1, self.serial_read)
-    #動画再生
+        line = None
+        if(self.serial.is_open):
+            line = self.serial.readline()
+            line = line.strip().decode('utf-8')
+            self.signal = line
+        else:
+            print('NG')
+            return
+        self.master.after(1, self.serial_read)
+    # 動画再生
+
     def move_cont(self):
-      if(self.signal=='5' and self.input == False):
-        self.input=True
-        if not self.playing:
-             self.playing = True
-             self.view.delete_play_button()
-             self.input=False
-      if(self.signal=='2' and self.playing == True and self.input == False):
-            self.input=True
+        if(self.signal == '5' and self.input == False):
+            self.input = True
+            if not self.playing:
+                self.playing = True
+                self.view.delete_play_button()
+                self.input = False
+        if(self.signal == '2' and self.playing == True and self.input == False):
+            self.input = True
             self.playing = False
             time.sleep(3)
-            self.model.reverse_video()        
+            self.model.reverse_video()
             self.auto_load()
-      if(self.signal=='1' and self.playing == True and self.input == False):
-            self.input=True
-            
+        if(self.signal == '1' and self.playing == True and self.input == False):
+            self.input = True
 
-      self.master.after(5, self.move_cont)
+        self.master.after(5, self.move_cont)
+
     def push_load_button(self):
         '動画選択ボタンが押された時の処理'
 
@@ -470,7 +470,6 @@ class Controller():
             # 画像の描画用のタイマーセット
             self.master.after(self.draw_timer, self.draw)
 
-    
     def button_press(self, event):
         'マウスボタン押された時の処理'
 
@@ -482,7 +481,7 @@ class Controller():
             self.view.delete_play_button()
         else:
             self.playing = False
-            
+
             # 再生ボタンの描画
             self.view.draw_play_button()
 
@@ -491,7 +490,6 @@ class Controller():
 
     def push_flip_button(self):
         self.model.set_flip()
-
 
 
 app = tkinter.Tk()
