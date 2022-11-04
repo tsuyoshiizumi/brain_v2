@@ -322,7 +322,8 @@ class Model():
         cv2.waitKey(1)
         cv2.destroyAllWindows()
         cv2.waitKey(1)
-        sys.exit()
+        exit()
+        # sys.exit()
         return
     # マウスが押されたとき
 
