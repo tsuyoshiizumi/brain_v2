@@ -10,6 +10,7 @@ import usbdebug2 as ub
 import platform
 import json
 from PIL import Image
+import os
 
 
 class Model():
@@ -26,6 +27,8 @@ class Model():
         # 設定ファイルの読み込み
         json_open = open('./settings.json', 'r')
         self.config = json.load(json_open)
+
+        self.stop = False
 
         # 画面の大きさを取得tkinter使用
         tk = tkinter.Tk()
@@ -101,6 +104,7 @@ class Model():
         self.sec_0()
         thread1.join()
         if self.signal != '9':
+
             self.init2()
 
     def init_com(self):
@@ -117,7 +121,7 @@ class Model():
             self.comnano = ub.port_p('1.2')
         if os == 'Windows':
             self.comb = 'COM7'
-            self.comnano = 'COM6'
+            self.comnano = 'COM3'
 
         try:
             self.serial_brain = sl.Serial(
@@ -160,7 +164,10 @@ class Model():
             else:
                 print('NG_m5')
                 return
+            if self.stop == True:
+                return
             time.sleep(1 / 100)
+        sys.exit()
 
     def sec_0(self):
         # 動画を開始タイミングまで戻すかぶってる
@@ -198,6 +205,7 @@ class Model():
             if(self.signal == '9'):
                 break
             if cv2.waitKey(1) & 0xFF == ord('q'):
+
                 self.exit_app()
                 break
             if t1 + 3 < time.time():
@@ -316,17 +324,20 @@ class Model():
     # アプリの終了
 
     def exit_app(self):
-        print('exit')
+
         self.signal = '9'
         self.cap.release()
+        self.stop = True
         cv2.waitKey(1)
         cv2.destroyAllWindows()
         cv2.waitKey(1)
-        # exit()
         sys.exit()
-        return
-    # マウスが押されたとき
 
+
+    # マウスが押されたとき
+print('koko')
 
 model = Model()
+
+print('koko')
 # model.reset()
