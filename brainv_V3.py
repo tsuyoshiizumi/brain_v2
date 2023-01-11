@@ -104,7 +104,6 @@ class Model():
         self.sec_0()
         thread1.join()
         if self.signal != '9':
-
             self.init2()
 
     def init_com(self):
@@ -121,7 +120,7 @@ class Model():
             self.comnano = ub.port_p('1.2')
         if os == 'Windows':
             self.comb = 'COM7'
-            self.comnano = 'COM3'
+            self.comnano = 'COM10'
 
         try:
             self.serial_brain = sl.Serial(
@@ -196,8 +195,14 @@ class Model():
 
         self.frame = cv2.resize(self.frame, (self.gwidth, self.gheight))
         self.c = self.c + 1
-        cv2.imshow("MATLAB", self.frame)
+        cv2.namedWindow("MATLAB", cv2.WINDOW_NORMAL)
         cv2.setMouseCallback('MATLAB', self.mouse_click)
+        cv2.moveWindow("MATLAB", 0, 0)
+        cv2.setWindowProperty(
+            "MATLAB", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+
+        #cv2.imshow("MATLAB", self.frame)
+        #cv2.setMouseCallback('MATLAB', self.mouse_click)
         cv2.waitKey(1)
         # 三秒待つ
         t1 = time.time()
@@ -228,8 +233,13 @@ class Model():
                 print('5')
                 break
             if ret == True:
+
                 self.frame = cv2.resize(
                     self.frame, (self.gwidth, self.gheight))
+                cv2.namedWindow("MATLAB", cv2.WINDOW_NORMAL)
+                cv2.setWindowProperty(
+                    "MATLAB", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+
                 cv2.imshow("MATLAB", self.frame)
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     self.exit_app()
@@ -332,7 +342,6 @@ class Model():
         cv2.destroyAllWindows()
         cv2.waitKey(1)
         sys.exit()
-
 
     # マウスが押されたとき
 print('koko')
